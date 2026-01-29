@@ -1,0 +1,486 @@
+```html
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Dyson Beauty Campaign</title>
+    <!-- 引入 Swiper CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css" />
+    <style>
+        :root {
+            --bg-color: #F3D6D3; /* 页面粉色背景 */
+            --card-bg: #FFFFFF;
+            --text-main: #000000;
+            --text-sub: #666666;
+            --tag-bg: #F9E4E4;
+            --accent-black: #000000;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            line-height: 1.5;
+            max-width: 480px; /* 模拟移动端最大宽度 */
+            margin: 0 auto;
+            padding-bottom: 50px;
+        }
+
+        /* --- 顶部 Logo/标题区域 --- */
+        .header {
+            background-color: #fff;
+            padding: 20px 20px;
+            text-align: left;
+        }
+
+        .header h1 {
+            font-size: 14px;
+            font-weight: 800;
+            letter-spacing: 0.5px;
+            line-height: 1.4;
+            text-transform: uppercase;
+        }
+
+        .header .brand-logo {
+            text-align: right;
+            font-size: 12px;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+
+        /* --- 通用组件：黑色胶囊标题 --- */
+        .section-header {
+            display: flex;
+            justify-content: center;
+            margin: 30px 0 20px;
+        }
+
+        .section-badge {
+            background-color: var(--accent-black);
+            color: #fff;
+            padding: 8px 24px;
+            border-radius: 50px;
+            font-size: 15px;
+            font-weight: bold;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+.icon-img {
+    width: 18px;
+    height: 18px;
+    object-fit: contain;
+}
+        
+        /* 简单模拟图标 */
+        .icon { font-style: normal; }
+
+        /* --- 1. 顶部 Banner 轮播 --- */
+        .banner-container {
+            width: 100%;
+            height: 320px; /* 根据设计稿比例设定 */
+            overflow: hidden;
+            background-color: #ddd;
+        }
+
+        .banner-container .swiper-slide img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        .banner-container .swiper {
+         height: 100%;
+        }
+
+        .banner-container .swiper-slide img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    }
+  
+    /* 分页点 */
+    .banner-container .swiper-pagination-bullet {
+    background: #fff;
+    opacity: 0.5;
+    }
+    .banner-container .swiper-pagination-bullet-active {
+    opacity: 1;
+    }
+
+        /* --- 2. 品牌重点新闻模块 --- */
+        .news-section {
+            padding: 0 16px;
+        }
+
+        .news-card {
+            background: var(--card-bg);
+            border-radius: 20px;
+            padding: 30px 20px;
+            text-align: center;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+        }
+
+        .news-title {
+            font-size: 14px;
+            font-weight: 700;
+            margin-bottom: 10px;
+            line-height: 1.6;
+        }
+
+        .news-desc {
+            font-size: 12px;
+            color: var(--text-sub);
+            margin-bottom: 25px;
+        }
+
+        .media-tags {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 10px;
+        }
+
+        .tag {
+            background-color: var(--tag-bg);
+            color: #333;
+            font-size: 10px;
+            padding: 8px 0;
+            border-radius: 20px;
+            text-align: center;
+            font-weight: 500;
+        }
+
+        /* --- 3. 艺人产品露出 (核心优化部分) --- */
+        .artist-section {
+            width: 100%;
+            overflow: hidden;
+            padding: 10px 0;
+        }
+
+        .artist-swiper {
+            width: 100%;
+            padding-bottom: 30px; /* 底部留给分页器 */
+            /* 容器高度 = 图片高度 + 文字条高度 + 缩放预留空间 */
+            height: 450px; 
+            padding-top: 20px;
+        }
+
+        /* 单个 Slide 样式 */
+        .artist-slide {
+            /* 宽度设置为屏幕宽度的 70% 左右，露出两边 */
+            width: 68%; 
+            height: auto;
+            position: relative;
+            
+            /* 默认状态：缩小、变暗 */
+            transform: scale(0.8);
+            opacity: 0.75; 
+            /* 丝滑放大的关键：Cubic Bezier 曲线 */
+            transition: transform 0.5s cubic-bezier(0.25, 1, 0.5, 1), opacity 0.5s ease;
+            
+            /* 圆角处理 */
+            border-radius: 12px;
+            overflow: hidden; 
+            box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+        }
+
+        /* 激活状态（中间）：原大小、不透明、深阴影 */
+        .artist-slide.swiper-slide-active {
+            transform: scale(1.05); /* 稍微放大一点点 */
+            opacity: 1;
+            z-index: 10;
+            box-shadow: 0 8px 16px rgba(0,0,0,0.12);
+        }
+
+        /* 内部容器 */
+        .artist-card-content {
+            display: flex;
+            flex-direction: column;
+            height: 100%;
+            background-color: #fff;
+        }
+
+        /* 图片区域 */
+        .artist-img-box {
+            width: 100%;
+            /* 设定固定高度，保证长方形比例 */
+            height: 360px; 
+            background-color: #f0f0f0;
+            position: relative;
+        }
+
+        .artist-img-box img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block;
+        }
+
+        /* 底部文字条 - 这里的 49px 对应设计稿 97px (@2x) */
+        .artist-info {
+            height: 49px; 
+            min-height: 49px; /* 强制高度 */
+            background: #fff;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 16px;
+        }
+
+        .artist-name {
+            font-size: 14px;
+            font-weight: 700;
+            color: #000;
+        }
+
+        .arrow-icon {
+            width: 22px;
+            height: 22px;
+            border: 1px solid #ddd;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 10px;
+            color: #999;
+        }
+
+        /* 艺人部分分页器自定义 */
+        .artist-swiper .swiper-pagination {
+            bottom: 0;
+        }
+        .artist-swiper .swiper-pagination-bullet {
+            background: #fff;
+            opacity: 0.5;
+            width: 6px;
+            height: 6px;
+        }
+        .artist-swiper .swiper-pagination-bullet-active {
+            background: #fff;
+            opacity: 1;
+        }
+
+        /* --- 4. 达人产品露出 (九宫格) --- */
+        .influencer-section {
+            padding: 0 16px;
+        }
+
+        .influencer-grid {
+            background: var(--card-bg);
+            border-radius: 20px;
+            padding: 16px;
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 8px;
+        }
+
+        .influencer-item {
+            position: relative;
+            width: 100%;
+            padding-bottom: 133%; /* 3:4 比例 */
+            border-radius: 8px;
+            overflow: hidden;
+            background: #eee;
+        }
+
+        .influencer-item img {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+    </style>
+</head>
+<body>
+
+    <!-- 顶部文案 -->
+    <header class="header">
+        <div class="brand-logo">dyson</div>
+        <h1>DYSON BEAUTY 590<br>NPD LAUNCH CAMPAIGN PR RESULT<br>QUICK RECAP</h1>
+    </header>
+
+    <!-- 1. 顶部 Banner 轮播 -->
+    <div class="swiper banner-container">
+        <div class="swiper-wrapper">
+            <div class="swiper-slide"><img src="images/banner1.png"></div>
+            <div class="swiper-slide"><img src="images/banner2.png"></div>
+            <div class="swiper-slide"><img src="images/banner3.png"></div>
+        </div>
+        <div class="swiper-pagination"></div>
+    </div>
+
+    <!-- 2. 品牌重点新闻 -->
+    <section class="news-section">
+        <div class="section-header">
+            <div class="section-badge">
+                <img class="icon-img" src="images/news.png" alt="">
+品牌重点新闻
+            </div>
+        </div>
+        
+        <div class="news-card">
+            <div class="news-title">
+                戴森发布全新造型吹风机 SUPERSONIC CD-ANDA 2X™<br>
+                突破戴森吹风机巅峰
+            </div>
+            <div class="news-desc">吹干、拉直、卷发全能三合一</div>
+            
+            <div class="media-tags">
+                <div class="tag">VOGUE</div>
+                <div class="tag">ELLE</div>
+                <div class="tag">北京青年</div>
+                <div class="tag">界面新闻</div>
+                <div class="tag">新浪网</div>
+                <div class="tag">网易网</div>
+                <div class="tag">钛媒体</div>
+                <div class="tag">新浪科技</div>
+                <div class="tag" style="grid-column: span 4; background: transparent; text-align: left; padding-left: 10px; color: #666;">等媒体，共计30+篇</div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 3. 艺人产品露出 (优化版) -->
+    <section class="artist-section">
+        <div class="section-header">
+            <div class="section-badge">
+                <img class="icon-img" src="images/artist.png" alt="">
+艺人产品露出
+            </div>
+        </div>
+
+        <div class="swiper artist-swiper">
+            <div class="swiper-wrapper">
+                <!-- Slide 1 -->
+                <div class="swiper-slide artist-slide">
+                    <div class="artist-card-content">
+                        <div class="artist-img-box"><img src="images/artist1.png"></div>
+                        <div class="artist-info"><span class="artist-name">@夏梦</span><div class="arrow-icon">></div></div>
+                    </div>
+                </div>
+                <!-- Slide 2 -->
+                <div class="swiper-slide artist-slide">
+                    <div class="artist-card-content">
+                        <div class="artist-img-box"><img src="images/artist2.png"></div>
+                        <div class="artist-info"><span class="artist-name">@汤梦佳</span><div class="arrow-icon">></div></div>
+                    </div>
+                </div>
+                <!-- Slide 3 -->
+                <div class="swiper-slide artist-slide">
+                    <div class="artist-card-content">
+                        <div class="artist-img-box"><img src="images/artist3.png"></div>
+                        <div class="artist-info"><span class="artist-name">@邱天</span><div class="arrow-icon">></div></div>
+                    </div>
+                </div>
+                <!-- Slide 4 -->
+                <div class="swiper-slide artist-slide">
+                    <div class="artist-card-content">
+                        <div class="artist-img-box"><img src="images/artist4.png"></div>
+                        <div class="artist-info"><span class="artist-name">@毛晓慧</span><div class="arrow-icon">></div></div>
+                    </div>
+                </div>
+                <!-- Slide 5 -->
+                <div class="swiper-slide artist-slide">
+                    <div class="artist-card-content">
+                        <div class="artist-img-box"><img src="images/artist5.png"></div>
+                        <div class="artist-info"><span class="artist-name">@李婷婷</span><div class="arrow-icon">></div></div>
+                    </div>
+                </div>
+                <!-- Slide 6 -->
+                <div class="swiper-slide artist-slide">
+                    <div class="artist-card-content">
+                        <div class="artist-img-box"><img src="images/artist6.png"></div>
+                        <div class="artist-info"><span class="artist-name">@戴萌</span><div class="arrow-icon">></div></div>
+                    </div>
+                </div>
+                <!-- Slide 7 -->
+                <div class="swiper-slide artist-slide">
+                    <div class="artist-card-content">
+                        <div class="artist-img-box"><img src="images/artist7.png"></div>
+                        <div class="artist-info"><span class="artist-name">@罗予彤</span><div class="arrow-icon">></div></div>
+                    </div>
+                </div>
+                <!-- Slide 8 -->
+                <div class="swiper-slide artist-slide">
+                    <div class="artist-card-content">
+                        <div class="artist-img-box"><img src="images/artist8.png"</div>
+                        <div class="artist-info"><span class="artist-name">@王霏霏</span><div class="arrow-icon">></div></div>
+                    </div>
+                </div>
+            </div>
+            <div class="swiper-pagination"></div>
+        </div>
+    </section>
+
+    <!-- 4. 达人产品露出 -->
+    <section class="influencer-section">
+        <div class="section-header">
+            <div class="section-badge">
+                <img class="icon-img" src="images/influencer.png" alt="">
+达人产品露出
+            </div>
+        </div>
+
+        <div class="influencer-grid">
+            <div class="influencer-item"><img src="images/kol1.png"></div>
+            <div class="influencer-item"><img src= "images/kol2.png"></div>
+            <div class="influencer-item"><img src= "images/kol3.png"></div>
+            <div class="influencer-item"><img src= "images/kol4.png"></div>
+            <div class="influencer-item"><img src= "images/kol5.png"></div>
+            <div class="influencer-item"><img src= "images/kol6.png"></div>
+            <div class="influencer-item"><img src= "images/kol7.png"></div>
+            <div class="influencer-item"><img src= "images/kol8.png"></div>
+            <div class="influencer-item"><img src= "images/kol9.png"></div>
+        </div>
+    </section>
+
+    <!-- 引入 Swiper JS -->
+    <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
+    <script>
+        // 1. 初始化顶部 Banner 轮播
+        const bannerSwiper = new Swiper('.banner-container', {
+            loop: true,
+            autoplay: {
+                delay: 3000,
+                disableOnInteraction: false,
+            },
+            pagination: {
+                el: '.banner-container .swiper-pagination',
+                clickable: true,
+            },
+        });
+
+        // 2. 初始化艺人产品露出轮播 (Center Mode, 8 Slides, Smooth Scaling)
+        const artistSwiper = new Swiper('.artist-swiper', {
+            slidesPerView: 'auto',  // 允许 CSS 定义 Slide 宽度 (70%)
+            centeredSlides: true,   // 激活的图片居中
+            spaceBetween: 20,       // 图片间距
+            loop: true,             // 循环播放
+            speed: 600,             // 切换速度，保证丝滑感
+            grabCursor: true,
+            
+            autoplay: {
+                delay: 2500,
+                disableOnInteraction: false,
+                pauseOnMouseEnter: true
+            },
+            
+            pagination: {
+                el: '.artist-swiper .swiper-pagination',
+                clickable: true,
+                dynamicBullets: true,
+            },
+        });
+    </script>
+</body>
+</html>
+```
